@@ -12,7 +12,7 @@ export class SignUpPage {
 
   async open() {
     await test.step(`Open 'Sign Up' page`, async () => {
-      await this.page.goto('/user/register');
+      await this.page.goto('https://conduit.mate.academy/user/register');
     });
   }
 

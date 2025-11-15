@@ -1,14 +1,19 @@
 import { faker } from '@faker-js/faker';
+import { Logger } from '../logger/Logger';
 
-export function generateNewArticleData(logger, tagNumber = 0) {
-  const tags = Array.from({ length: tagNumber }, () => faker.lorem.word());
+export function generateNewArticleData(tagNumber = 0) {
+  const tags = Array.from({ length: tagNumber }, () => faker.lorem.words());
+  const logger = new Logger('info'); // Initialized logger
 
-  const article = {
+  let article = {
     title: faker.lorem.words(),
-    description: faker.lorem.sentence(4),
-    text: faker.lorem.sentences(2),
+    description: faker.lorem.sentence(),
+    text: faker.lorem.sentences(),
     tags,
   };
 
+  logger.error(`New article generated: ${article}`);
+
   return article;
 }
+ 

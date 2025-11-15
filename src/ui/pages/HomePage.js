@@ -5,6 +5,8 @@ export class HomePage {
     this.page = page;
     this.yourFeedTab = page.getByText('Your Feed');
     this.newArticleLink = page.getByRole('link', { name: 'New Article' });
+    this.usersAvatar = page.locator('.hide-text.user-pic');
+    this.newestArticleDescription = page.locator('.preview-link p').nth(0);
   }
 
   async clickNewArticleLink() {
@@ -18,4 +20,21 @@ export class HomePage {
       await expect(this.yourFeedTab).toBeVisible();
     });
   }
+
+  async clickUserAvatar() {
+    await test.step(`Click user's avatar and redirect to My Articles page`,
+      async () => {
+      await this.usersAvatar.click();
+      await this.page.waitForURL(
+        `https://conduit.mate.academy/profile/**`);
+    });
+  }
+
+  async assertArticDescriptionIsUpdated(description) {
+    await test.step(`Assert updated article's description`,
+      async () => {
+      await expect(this.newestArticleDescription).toContainText(description);
+    });
+  }
+
 }

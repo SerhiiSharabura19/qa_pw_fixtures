@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+ import { expect, test } from '@playwright/test';
 
 export class CreateArticlePage {
   constructor(page) {
@@ -6,15 +6,18 @@ export class CreateArticlePage {
     this.titleField = page.getByPlaceholder('Article Title');
     this.descriptionField = page.getByPlaceholder(`What's this article about?`);
     this.textField = page.getByPlaceholder('Write your article (in markdown)');
-    this.publishArticleButton = page.getByRole('button', {
-      name: 'Publish Article',
-    });
+    this.tagsField = page.getByPlaceholder('Enter tags');
+    this.publishArticleButton = page
+    .locator('.btn.btn-lg.pull-xs-right');
+    this.updateArticleButton = page.getByRole('button', 
+      { name: 'Update' + ' Article' });
     this.errorMessage = page.getByRole('list').nth(1);
   }
 
   async fillTitleField(title) {
     await test.step(`Fill the 'Title' field`, async () => {
       await this.titleField.fill(title);
+      await expect(this.titleField).toHaveValue(title);
     });
   }
 
@@ -30,9 +33,25 @@ export class CreateArticlePage {
     });
   }
 
+  async fillTagsField(tags) {
+    await test.step(`Fill the 'Tags' field`, async () => {
+      for (const tag of tags) {
+      await this.tagsField.fill(tag);
+      await this.tagsField.press('Enter');
+      }
+    });
+  }
+
   async clickPublishArticleButton() {
     await test.step(`Click the 'Publish Article' button`, async () => {
       await this.publishArticleButton.click();
+    });
+  }
+
+  async clickUpdateArticleButton() {
+  await test.step(`Click the 'Update Article' button`, async () => {
+    await expect(this.updateArticleButton).toBeEnabled();
+    await this.updateArticleButton.click();
     });
   }
 

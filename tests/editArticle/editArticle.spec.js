@@ -2,20 +2,21 @@ import { generateNewUserData } from '../../src/common/testData/generateNewUserDa
 import { generateNewArticleData } from '../../src/common/testData/generateNewArticleData';
 import { signUpUser } from '../../src/ui/actions/auth/signUpUser';
 import { test } from '../_fixtures/fixtures';
+import { Logger } from '../../src/common/logger/Logger';
 
 let user;
 let article;
 let articleData;
 
-test.beforeEach(async ({ page}) => {
+test.beforeEach(async ({ page }) => {
   user = generateNewUserData();
   await signUpUser(page, user); 
   return user;
 });
 
 test('Edit the article title for the existing article', async ({
-  viewArticlePage, createArticlePage, articleWithoutTags}) => {
-  const articleData = generateNewArticleData();
+  viewArticlePage, createArticlePage, articleWithoutTags, logger}) => {
+  const articleData = generateNewArticleData(0, logger);
   await viewArticlePage.clickEditButton();
   await createArticlePage.fillTitleField(articleData.title);
   await createArticlePage.clickUpdateArticleButton();
@@ -27,9 +28,10 @@ test('Edit the article description for the existing article',
     viewArticlePage,
     createArticlePage,
     homePage,
-    articleWithoutTags
+    articleWithoutTags, 
+    logger
   }) => {
-  const articleData = generateNewArticleData();
+  const articleData = generateNewArticleData(0, logger);
   await viewArticlePage.clickEditButton();
   await createArticlePage.fillDescriptionField(articleData.description);
   await createArticlePage.clickUpdateArticleButton();
@@ -41,9 +43,10 @@ test('Edit the article description for the existing article',
 test('Edit the article text for the existing article', async ({
     viewArticlePage,
     createArticlePage,
-    articleWithoutTags
+    articleWithoutTags,
+    logger
 }) => {
-  const articleData = generateNewArticleData();
+  const articleData = generateNewArticleData(0, logger);
   await viewArticlePage.clickEditButton();
   await createArticlePage.fillTextField(articleData.text);
   await createArticlePage.clickUpdateArticleButton();
@@ -53,9 +56,10 @@ test('Edit the article text for the existing article', async ({
 test('Add the tag for the existing article without tags', async ({
     viewArticlePage,
     createArticlePage,
-    articleWithoutTags
+    articleWithoutTags, 
+    logger
 }) => {
-  articleData = generateNewArticleData(1);
+  articleData = generateNewArticleData(1, logger);
   await viewArticlePage.clickEditButton();
   await createArticlePage.fillTagsField(articleData.tags);
   await createArticlePage.clickUpdateArticleButton();
@@ -65,10 +69,11 @@ test('Add the tag for the existing article without tags', async ({
 test('Add the tag for the existing article with tags', async ({
     viewArticlePage,
     createArticlePage,
-    articleWithOneTag
+    articleWithOneTag,
+    logger
 }) => {
-  articleData = generateNewArticleData(2);
-  article = articleWithOneTag;
+  articleData = generateNewArticleData(2, logger);
+  article = articleWithOneTag; 
   await viewArticlePage.clickEditButton();
   await createArticlePage.fillTagsField(articleData.tags);
   await createArticlePage.clickPublishArticleButton();

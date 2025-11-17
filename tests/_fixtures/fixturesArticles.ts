@@ -11,7 +11,8 @@ export const test = base.extend<{
   editArticlePage: EditArticlePage,
   articleWithoutTags: ReturnType<typeof generateNewArticleData>,
   articleWithOneTag: ReturnType<typeof generateNewArticleData>,
-  articleWithTwoTags: ReturnType<typeof generateNewArticleData>
+  articleWithTwoTags: ReturnType<typeof generateNewArticleData>,
+  logger: ReturnType<typeof generateNewArticleData>
 }>({
   createArticlePage: async ({ page }, use) => {
     const createArticlePage = new CreateArticlePage(page);
@@ -28,18 +29,18 @@ export const test = base.extend<{
     await use(editArticlePage);
   }, 
 
-  articleWithoutTags: async ({page}, use) => {
-    const article = await createArticle(page);
+  articleWithoutTags: async ({page, logger}, use) => {
+    const article = await createArticle(page, 0, logger);
     await use(article);
   },
 
-  articleWithOneTag: async ({page}, use) => {
-    const article = await createArticle(page, 1);
+  articleWithOneTag: async ({page, logger}, use) => {
+    const article = await createArticle(page, 1, logger);
     await use(article);
   },
 
-  articleWithTwoTags: async ({page}, use) => {
-    const article = await createArticle(page, 2);
+  articleWithTwoTags: async ({page, logger}, use) => {
+    const article = await createArticle(page, 2, logger);
     await use(article);
   }
 

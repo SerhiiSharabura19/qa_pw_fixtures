@@ -4,7 +4,6 @@ export class ViewArticlePage {
   constructor(page) {
     this.page = page;
     this.articleTitleHeader = page.getByRole('heading');
-    this.articleDescription = page.getByRole('heading');
     this.editBtn = page.locator('span .btn.btn-outline-secondary.btn-sm')
     .nth(0);
     this.articleText = page.locator('.col-md-12');
@@ -52,7 +51,7 @@ export class ViewArticlePage {
     await test.step(`Assert the article has updated description`, async () => {
       const slug = await this.waitForArticlePutResponse();
       await this.page.goto(`https://conduit.mate.academy/article/${slug}`);
-      await expect(this.articleDescription).toContainText(description);
+      await expect(this.articleTitleHeader).toContainText(description);
     });
   }
 
@@ -64,13 +63,24 @@ export class ViewArticlePage {
     });
   }
 
-  async assertTagsAdded(tags) {
-    await test.step(`Assert tags are updated`, async () => {
-      const slug = await this.waitForArticlePutResponse();
-      await this.page.goto(`https://conduit.mate.academy/article/${slug}`);
-      await expect(this.tag).toContainText(tags);
-    });
-  }
+  async assertTagsAdded(expectedTags) {
+  await test.step(`Assert tags are updated`, async () => {
+    const slug = await this.waitForArticlePutResponse();
+    await this.page.goto(`https://conduit.mate.academy/article/${slug}`);
+
+    // Wait for tag elements to appear
+    const tagElements = this.page.locator(this.tag); 
+    await expect(tagElements).toHaveCount(expectedTags.length);
+
+    // Extract texts of all tags
+    const actualTags = await tagElements.allTextContents();
+
+    // Compare ignoring order
+    for (const tag of expectedTags) {
+      expect(actualTags).toContain(tag);
+    }
+  });
+}
 
   async assertTagUpdated(oldTags, newTags) {
     await test.step(`Assert tags are updated`, async () => {

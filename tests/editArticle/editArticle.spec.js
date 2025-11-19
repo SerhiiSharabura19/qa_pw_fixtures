@@ -76,6 +76,6 @@ test('Add the tag for the existing article with tags', async ({
   article = articleWithOneTag; 
   await viewArticlePage.clickEditButton();
   await createArticlePage.fillTagsField(articleData.tags);
-  await createArticlePage.clickPublishArticleButton();
+  await createArticlePage.clickUpdateArticleButton();
   await viewArticlePage.assertTagUpdated(article.tags, articleData.tags);
 });
